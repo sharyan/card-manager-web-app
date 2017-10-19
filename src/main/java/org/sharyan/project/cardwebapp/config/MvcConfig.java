@@ -20,11 +20,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(final ViewControllerRegistry registry) {
         super.addViewControllers(registry);
         registry.addViewController("/").setViewName("forward:/login");
-        registry.addViewController("/login");
-        registry.addViewController("/register.html");
-        registry.addViewController("/logout.html");
-        registry.addViewController("/homepage.html");
-        registry.addViewController("/admin.html");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/register.html").setViewName("register");
+        registry.addViewController("/logout.html").setViewName("logout");
+        registry.addViewController("/homepage.html").setViewName("homepage");
     }
 
     @Bean

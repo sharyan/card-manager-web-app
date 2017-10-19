@@ -26,7 +26,7 @@ public class UserController {
         return "register";
     }
 
-    @PostMapping
+    @PostMapping("/user/register")
     public String doRegistration() {
         // TODO: add welcome home page
         return "welcome";
