@@ -54,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/homepage")
-                    .successHandler(authenticationSuccessHandler)
-                    .failureHandler(authenticationFailureHandler)
+                    .successForwardUrl("/")
+//                    .successHandler(authenticationSuccessHandler)
+//                    .failureHandler(authenticationFailureHandler)
                     .failureUrl("/login?error")
                     .permitAll()
             .and()
@@ -81,14 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // @formatter:off
         authBuilder
                 .authenticationProvider(authenticationProvider());
-//        authBuilder.inMemoryAuthentication()
-//                    .withUser("admin")
-//                    .password("admin")
-//                    .roles("ADMIN", "USER")
-//                .and()
-//                    .withUser("user")
-//                    .password("user")
-//                    .roles("USER");
         // @formatter:on
     }
 

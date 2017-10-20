@@ -33,20 +33,17 @@ public class PersistentUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         if (securityLoginService.isBlockingUser(RequestUtils.getRequestIpAddress())) {
-            throw new RuntimeException("blocked");
+            // throw the same error as a normal flow, do not leak information that we block users
+            throw new UsernameNotFoundException(("No user found with username: " + username));
         }
 
-        try {
-            User user = userRepository.findByUsername(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("No user found with username: " + username);
-            }
-
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                    true, true, true, true, getAuthorities(user.getRoles()));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("No user found with username: " + username);
         }
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                true, true, true, true, getAuthorities(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {

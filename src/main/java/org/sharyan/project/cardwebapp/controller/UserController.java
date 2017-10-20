@@ -17,16 +17,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
-    public ModelAndView getLoginPage() {
+    @GetMapping("/")
+    public ModelAndView getHomepage() {
         // TODO: add login view
-        return new ModelAndView("login");
-    }
-
-    @PostMapping("/login")
-    public String performLogin() {
-        // TODO: add welcome home page
-        return "login";
+        return new ModelAndView("homepage");
     }
 
     @GetMapping("/register")

@@ -2,35 +2,50 @@ package org.sharyan.project.cardwebapp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.sharyan.project.cardwebapp.config.*;
+import org.sharyan.project.cardwebapp.config.ApplicationConfig;
+import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.UserController;
+import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
+import org.sharyan.project.cardwebapp.persistence.entity.Role;
+import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.FormLoginRequestBuilder;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = UserController.class)
-@Import({TestSecurityConfig.class, ApplicationConfig.class, PersistenceConfig.class})
+@Import({SecurityConfig.class, ApplicationConfig.class})
 public class UserControllerTests {
 
+    @MockBean
+    private UserRepository userRepository;
+
     @Autowired
-    private ApplicationContext applicationContext;
+    private WebApplicationContext applicationContext;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MockMvc mockMvc;
-
-    @WithMockUser
 
     @Test
     public void testGetLoginPage() throws Exception {
@@ -47,10 +62,22 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testNewUserRegistration() throws Exception {
-        mockMvc.perform(post("/register"))
+    @WithMockUser(username = "normalUser", password = "pwdmypass")
+    public void testUserLogin() throws Exception {
+        FormLoginRequestBuilder loginRequest = formLogin()
+                    .user("normalUser")
+                    .password("pwdmypass");
+
+        when(userRepository.findByUsername(eq("normalUser"))).thenReturn(User.builder()
+                .username("normalUser")
+                .password(passwordEncoder.encode("pwdmypass"))
+                .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
+                .build());
+
+        mockMvc.perform(loginRequest)
+                .andExpect(authenticated().withRoles("USER"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("register"));
+                .andExpect(forwardedUrl("/"));
     }
 
     @Test
