@@ -7,30 +7,20 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "user")
 @Getter
 @Setter
 @Builder
 @ToString
 @EqualsAndHashCode
+@Table(name="user_table")
 public class User {
 
     @Id
-    @SequenceGenerator(name = "user_generator", sequenceName = "user_sequence", initialValue = 28)
-    @GeneratedValue(generator = "user_generator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)

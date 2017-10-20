@@ -1,15 +1,8 @@
 package org.sharyan.project.cardwebapp.persistence.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -17,6 +10,8 @@ import java.util.Collection;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
+@Table(name="role_table")
 public class Role {
 
     @Id
@@ -28,12 +23,12 @@ public class Role {
 
     private String name;
 
-    public Role() {
-        super();
-    }
-
-    public Role(final String name) {
-        super();
-        this.name = name;
-    }
+//    public Role() {
+//        super();
+//    }
+//
+//    public Role(final String name) {
+//        super();
+//        this.name = name;
+//    }
 }

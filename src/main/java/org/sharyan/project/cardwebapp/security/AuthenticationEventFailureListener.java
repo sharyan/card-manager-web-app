@@ -1,6 +1,5 @@
 package org.sharyan.project.cardwebapp.security;
 
-import org.sharyan.project.cardwebapp.service.SecurityLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.AuthenticationException;

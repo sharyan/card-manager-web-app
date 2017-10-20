@@ -2,6 +2,10 @@ package org.sharyan.project.cardwebapp.config;
 
 
 import org.sharyan.project.cardwebapp.config.properties.SecurityProperties;
+import org.sharyan.project.cardwebapp.security.AuthenticationEventFailureListener;
+import org.sharyan.project.cardwebapp.security.AuthenticationEventSuccessListener;
+import org.sharyan.project.cardwebapp.security.PersistentUserDetailsService;
+import org.sharyan.project.cardwebapp.security.SecurityLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.StaticResourceRequest;
@@ -32,10 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
-
-    @Autowired
-    @Qualifier("persistentUserDetailsService")
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -79,7 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authBuilder) throws Exception {
         // @formatter:off
-        authBuilder.authenticationProvider(authenticationProvider());
+        authBuilder
+                .authenticationProvider(authenticationProvider());
 //        authBuilder.inMemoryAuthentication()
 //                    .withUser("admin")
 //                    .password("admin")
@@ -94,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(encoder());
         // daoAuthenticationProvider.setUserCache();
         return daoAuthenticationProvider;
@@ -108,6 +109,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    @Qualifier("persistentUserDetailsService")
+    public UserDetailsService userDetailsService() {
+        return new PersistentUserDetailsService();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new AuthenticationEventFailureListener();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new AuthenticationEventSuccessListener();
+    }
+
+    @Bean
+    public SecurityLoginService securityLoginService() {
+        return new SecurityLoginService();
     }
 
 }

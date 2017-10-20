@@ -1,4 +1,4 @@
-package org.sharyan.project.cardwebapp.service;
+package org.sharyan.project.cardwebapp.security;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SecurityLoginService {
 
-    @Value("${application.security.loginattemptlimit")
+    @Value("${application.security.loginattemptlimit}")
     private int maxLoginAttemptLimit;
 
     // TODO: back this with redis, will overload memory resources if DDOS by malicious users

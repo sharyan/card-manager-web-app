@@ -28,7 +28,7 @@ public class UserService {
         return userRepository.save(User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .roles(Collections.singletonList(new Role("ROLE_USER")))
+                .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
                 .build());
     }
 }

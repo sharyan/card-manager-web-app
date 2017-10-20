@@ -1,6 +1,5 @@
 package org.sharyan.project.cardwebapp.security;
 
-import org.sharyan.project.cardwebapp.service.SecurityLoginService;
 import org.sharyan.project.cardwebapp.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

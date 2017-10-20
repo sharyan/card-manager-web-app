@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "application.security")
 public class SecurityProperties {
 
+    private int loginAttemptLimit = 10;
+
     private Password password;
 
     public Password getPassword() {
@@ -17,8 +19,16 @@ public class SecurityProperties {
         this.password = password;
     }
 
+    public int getLoginAttemptLimit() {
+        return loginAttemptLimit;
+    }
+
+    public void setLoginAttemptLimit(int loginAttemptLimit) {
+        this.loginAttemptLimit = loginAttemptLimit;
+    }
+
     public static class Password {
-        private int strength;
+        private int strength = 11;
 
         public int getStrength() {
             return strength;
