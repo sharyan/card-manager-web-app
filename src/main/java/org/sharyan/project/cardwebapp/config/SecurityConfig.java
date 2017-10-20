@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -45,12 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
             .authorizeRequests()
-                .requestMatchers(StaticResourceRequest.toCommonLocations())
-                    .permitAll()
-                .mvcMatchers("/login", "/register")
-                    .permitAll()
-                .anyRequest()
-                    .fullyAuthenticated()
+                .requestMatchers(StaticResourceRequest.toCommonLocations()).permitAll()
+                .anyRequest().fullyAuthenticated()
             .and()
                 .formLogin()
                     .loginPage("/login")
@@ -75,6 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
         // @formatter:on
     }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers("/register**");
+    }
+
 
     @Override
     public void configure(AuthenticationManagerBuilder authBuilder) throws Exception {

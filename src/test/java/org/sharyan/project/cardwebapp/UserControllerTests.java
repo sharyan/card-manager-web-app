@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.sharyan.project.cardwebapp.config.ApplicationConfig;
 import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.UserController;
+import org.sharyan.project.cardwebapp.dto.UserDto;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
 import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
@@ -24,11 +25,12 @@ import java.util.Collections;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.FormLoginRequestBuilder;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -54,13 +56,6 @@ public class UserControllerTests {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
-    }
-
-    @Test
-    public void testGetRegistrationPage() throws Exception {
-        mockMvc.perform(get("/register"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"));
     }
 
     @Test
@@ -91,6 +86,25 @@ public class UserControllerTests {
         mockMvc.perform(loginRequest)
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    public void testGetRegistrationPage() throws Exception {
+        mockMvc.perform(get("/register"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("user", new UserDto()))
+                .andExpect(view().name("register"));
+    }
+
+    @Test
+    public void testRegistration() throws Exception {
+        mockMvc.perform(post("/register")
+                .param("username", "newUser")
+                .param("password", "PASSWORD"))
+            .andExpect(status().isOk());
+
+        verify(userRepository, times(1)).findByUsername(eq("newUser"));
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test

@@ -4,6 +4,8 @@ package org.sharyan.project.cardwebapp.controller;
 import org.sharyan.project.cardwebapp.dto.UserDto;
 import org.sharyan.project.cardwebapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,14 +26,13 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public ModelAndView getRegistrationPage() {
-        // TODO: add registration view
+    public ModelAndView getRegistrationPage(Model model) {
+        model.addAttribute("user", new UserDto());
         return new ModelAndView("register");
     }
 
-    @PostMapping("/register")
-    public ModelAndView doRegistration(@Valid UserDto userDto) {
-        // TODO: add welcome home page
+    @PostMapping(value = "/register")
+    public ModelAndView doRegistration(@Valid UserDto userDto, BindingResult result) {
         userService.registerNewUser(userDto);
         return new ModelAndView("homepage");
     }
