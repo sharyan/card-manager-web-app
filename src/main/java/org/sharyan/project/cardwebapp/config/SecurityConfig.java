@@ -52,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     .loginPage("/login")
                     .successForwardUrl("/")
+                    .usernameParameter("username")
+                    .passwordParameter("password")
 //                    .successHandler(authenticationSuccessHandler)
 //                    .failureHandler(authenticationFailureHandler)
                     .failureUrl("/login?error")
@@ -75,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().mvcMatchers("/register**");
+        web.ignoring().mvcMatchers("/register**", "/user/register**");
     }
 
 

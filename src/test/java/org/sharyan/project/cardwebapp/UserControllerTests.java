@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.sharyan.project.cardwebapp.config.ApplicationConfig;
 import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.UserController;
-import org.sharyan.project.cardwebapp.dto.UserDto;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
 import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
@@ -92,13 +91,12 @@ public class UserControllerTests {
     public void testGetRegistrationPage() throws Exception {
         mockMvc.perform(get("/register"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("user", new UserDto()))
                 .andExpect(view().name("register"));
     }
 
     @Test
     public void testRegistration() throws Exception {
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/user/register")
                 .param("username", "newUser")
                 .param("password", "PASSWORD"))
             .andExpect(status().isOk());
