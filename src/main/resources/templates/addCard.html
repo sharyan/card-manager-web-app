@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.newCard}"></title>
+</head>
+<body>
+<h1 th:text="#{title.newCard}"></h1>
+<form action="#" th:action="@{/card/add}" method="post">
+    <!--<ul>-->
+    <!--<li th:each="err : ${#fields.errors('cardNumber')}" th:text="${err}" />-->
+    <!--<li th:each="err : ${#fields.errors('cardName')}" th:text="${err}" />-->
+    <!--<li th:each="err : ${#fields.errors('cardExpiryMonth')}" th:text="${err}" />-->
+    <!--<li th:each="err : ${#fields.errors('cardExpiryYear')}" th:text="${err}" />-->
+    <!--</ul>-->
+    <table border="0">
+        <tr>
+            <td><label th:text="#{fields.card_number}" /></td>
+            <td><input type="text" id="cardNumber" name="cardNumber" autofocus="autofocus" /></td>
+        </tr>
+        <tr>
+            <td><label th:text="#{fields.card_name}" /></td>
+            <td><input type="text" id="cardName" name="cardName" /></td>
+        </tr>
+        <tr>
+            <td><label th:text="#{fields.card_expiry}" /></td>
+            <td><input type="month" id="cardExpiryMonth" name="cardExpiryMonth" /></td>
+            <td><input type="number" min="1960" max="2030" id="cardExpiryYear" name="cardExpiryYear" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Submit" /></td>
+            <td><input type="reset"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
