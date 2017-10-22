@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.searchResults}"></title>
+</head>
+<body>
+
+<table>
+    <tr th:each="card : ${cards}">
+        <td th:text="${card.cardNumber}"></td>
+        <td th:text="${prod.cardName}"></td>
+        <td th:text="${prod.expiryMonth}"></td>
+        <td th:text="${prod.expiryYear}"></td>
+    </tr>
+</table>
+
+</body>
+</html>
