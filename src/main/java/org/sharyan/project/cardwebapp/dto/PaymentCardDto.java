@@ -9,7 +9,7 @@ import java.time.Year;
 // TODO: add validation
 @Value(staticConstructor = "createNewCard")
 @Builder
-public class CardDto {
+public class PaymentCardDto {
 
     private final String cardNumber;
     private final String cardName;

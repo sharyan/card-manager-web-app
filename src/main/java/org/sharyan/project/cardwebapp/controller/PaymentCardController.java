@@ -1,6 +1,6 @@
 package org.sharyan.project.cardwebapp.controller;
 
-import org.sharyan.project.cardwebapp.dto.CardDto;
+import org.sharyan.project.cardwebapp.dto.PaymentCardDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +12,7 @@ import javax.validation.Valid;
 public class PaymentCardController {
 
     @PostMapping("/card/add")
-    public String addNewPaymentCard(@Valid CardDto newCard) {
+    public String addNewPaymentCard(@Valid PaymentCardDto newCard) {
         return "homepage?addCardSuccess";
     }
 

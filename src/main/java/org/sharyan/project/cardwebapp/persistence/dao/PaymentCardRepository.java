@@ -13,4 +13,6 @@ public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long> 
     List<PaymentCard> findAllByCardNumberEquals(String cardNumber);
 
     PaymentCard findAllByOwner(User owner);
+
+    void deleteById(Long paymentCardId);
 }
