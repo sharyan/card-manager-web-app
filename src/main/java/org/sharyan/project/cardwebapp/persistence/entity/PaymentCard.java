@@ -31,4 +31,8 @@ public class PaymentCard {
 
     @Basic(fetch = FetchType.LAZY)
     private int year;
+
+    @OneToOne(fetch = FetchType.EAGER) // assuming that each card has a unique owner
+    @MapsId
+    private User owner;
 }
