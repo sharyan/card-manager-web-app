@@ -13,13 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -35,6 +39,9 @@ public class RegistrationConflictTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ResourceBundleMessageSource messageSource;
+
     @Test
     public void testUsernameConflict() throws Exception {
         final String username = "EXISTING_USER";
@@ -47,10 +54,19 @@ public class RegistrationConflictTests {
                         .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
                         .build());
 
-        mockMvc.perform(post("/user/register")
+        String redirectedUrl = mockMvc.perform(post("/user/register")
                 .param("username", username)
                 .param("password", password))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/register?registrationError"))
+                .andReturn().getResponse().getRedirectedUrl();
+
+        assertThat(redirectedUrl).isNotNull().isNotEmpty().contains("registrationError");
+
+        mockMvc.perform(get(redirectedUrl))
                 .andExpect(status().isOk())
-                .andExpect(view().name("register"));
+                .andExpect(view().name("register"))
+                .andExpect(result -> assertThat(result.getResponse().getContentAsString())
+                        .contains(messageSource.getMessage("errors.user.alreadyRegistered", null, Locale.getDefault())));
     }
 }

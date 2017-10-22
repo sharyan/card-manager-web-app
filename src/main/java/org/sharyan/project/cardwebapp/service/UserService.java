@@ -22,7 +22,7 @@ public class UserService {
 
     public User registerNewUser(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()) != null) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException("User with username " + userDto.getUsername() + " already exists");
         }
 
         return userRepository.save(User.builder()

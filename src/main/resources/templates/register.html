@@ -11,7 +11,7 @@
         <!--<li th:each="err : ${#fields.errors('password')}" th:text="${err}" />-->
     <!--</ul>-->
     <ul>
-        <li th:if="${registrationError}" th:text="${registrationError}"></li>
+        <li th:utext="#{errors.user.alreadyRegistered}" th:unless="${param.registrationError == null}"></li>
     </ul>
     <table border="1">
         <tr>

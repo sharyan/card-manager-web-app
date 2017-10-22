@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Locale;
-
 @ControllerAdvice(assignableTypes = {UserController.class})
 public class UserExistsExceptionHandler {
 
@@ -18,8 +16,6 @@ public class UserExistsExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public String handleUserExistsError(UserAlreadyExistsException userAlreadyExists, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addAttribute("registrationError",
-                messageSource.getMessage("errors.user.alreadyRegistered", null, Locale.getDefault()));
-        return "registration?error";
+        return "redirect:/register?registrationError";
     }
 }
