@@ -1,4 +1,4 @@
-package org.sharyan.project.cardwebapp;
+package org.sharyan.project.cardwebapp.controller;
 
 
 import org.junit.Test;
