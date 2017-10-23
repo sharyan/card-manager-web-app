@@ -5,13 +5,13 @@
     <title th:text="#{title.searchResults}"></title>
 </head>
 <body>
-
+<h1 th:text="#{title.searchResults}"></h1>
 <table>
     <tr th:each="card : ${cards}">
         <td th:text="${card.cardNumber}"></td>
-        <td th:text="${prod.cardName}"></td>
-        <td th:text="${prod.expiryMonth}"></td>
-        <td th:text="${prod.expiryYear}"></td>
+        <td th:text="${card.cardName}"></td>
+        <td th:text="${card.expiryMonth}"></td>
+        <td th:text="${card.expiryYear}"></td>
     </tr>
 </table>
 

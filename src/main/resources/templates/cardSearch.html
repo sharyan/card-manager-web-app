@@ -10,7 +10,8 @@
     <table>
         <tr>
             <td><label th:text="#{fields.search}"></label></td>
-            <td><input type="search"></td>
+            <td><input type="search" name="searchTerm" id="searchTerm"></td>
+            <td th:if="${#fields.hasErrors('searchTerm')}" th:errors="*{searchTerm}"></td>
         </tr>
     </table>
 </form>
