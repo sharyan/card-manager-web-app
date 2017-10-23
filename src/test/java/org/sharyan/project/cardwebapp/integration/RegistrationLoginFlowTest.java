@@ -30,6 +30,5 @@ public class RegistrationLoginFlowTest {
 
         assertThat(registrationResult.getStatusCode())
                 .isEqualByComparingTo(HttpStatus.OK);
-
     }
 }

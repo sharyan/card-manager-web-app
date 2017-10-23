@@ -2,10 +2,7 @@ package org.sharyan.project.cardwebapp.config;
 
 
 import org.sharyan.project.cardwebapp.config.properties.SecurityProperties;
-import org.sharyan.project.cardwebapp.security.AuthenticationEventFailureListener;
-import org.sharyan.project.cardwebapp.security.AuthenticationEventSuccessListener;
 import org.sharyan.project.cardwebapp.security.PersistentUserDetailsService;
-import org.sharyan.project.cardwebapp.security.SecurityLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.StaticResourceRequest;
@@ -26,18 +23,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -57,8 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .failureUrl("/login?error")
                     .usernameParameter("username")
                     .passwordParameter("password")
-//                    .successHandler(authenticationSuccessHandler)
-//                    .failureHandler(authenticationFailureHandler)
                     .permitAll()
             .and()
                 .sessionManagement()
@@ -120,20 +107,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return new PersistentUserDetailsService();
     }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new AuthenticationEventFailureListener();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new AuthenticationEventSuccessListener();
-    }
-
-    @Bean
-    public SecurityLoginService securityLoginService() {
-        return new SecurityLoginService();
-    }
-
 }
