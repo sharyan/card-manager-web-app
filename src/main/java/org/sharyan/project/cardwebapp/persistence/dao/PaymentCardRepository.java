@@ -8,9 +8,12 @@ import java.util.List;
 
 public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long> {
 
-    PaymentCard findByCardNumber(String cardNumber);
 
-    List<PaymentCard> findAllByCardNumberEquals(String cardNumber);
+    PaymentCard findByCardNumberAndOwner_Id(String cardNumber, Long ownerId);
+
+    List<PaymentCard> findAllByCardNumberLike(String cardNumber);
+
+    List<PaymentCard> findAllByCardNumberLikeAndOwnerIdEquals(String cardNumber, Long ownerId);
 
     PaymentCard findAllByOwner(User owner);
 

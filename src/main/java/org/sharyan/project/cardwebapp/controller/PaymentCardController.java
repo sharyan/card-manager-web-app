@@ -4,6 +4,7 @@ import org.sharyan.project.cardwebapp.dto.PaymentCardDto;
 import org.sharyan.project.cardwebapp.service.PaymentCardService;
 import org.sharyan.project.cardwebapp.validation.Patterns;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,21 +29,23 @@ public class PaymentCardController {
     }
 
     @PostMapping("/card/add")
-    public String addNewPaymentCard(@ModelAttribute("paymentCard") @Valid PaymentCardDto paymentCard, BindingResult result) {
+    public String addNewPaymentCard(@ModelAttribute("paymentCard") @Valid PaymentCardDto paymentCard,
+                                    BindingResult result,
+                                    Authentication auth) {
         if (result.hasErrors()) {
             return "addCard";
         }
-        paymentCardService.addOrUpdatePaymentCard(paymentCard);
+        paymentCardService.addOrUpdatePaymentCard(auth, paymentCard);
         return "redirect:/homepage?addCardSuccess";
     }
 
     @PostMapping("/card/find")
-    public String searchCards(@RequestParam String searchTerm, Model model) {
+    public String searchCards(@RequestParam String searchTerm, Model model, Authentication auth) {
         if (!Patterns.VALID_SEARCH_CARD_PATTERN.matcher(searchTerm).matches()) {
             model.addAttribute("cards", Collections.emptyList());
             return "searchResults";
         } else {
-            model.addAttribute("cards", paymentCardService.searchForPaymentCards(searchTerm));
+            model.addAttribute("cards", paymentCardService.searchForPaymentCards(auth, searchTerm));
             return "searchResults";
         }
     }

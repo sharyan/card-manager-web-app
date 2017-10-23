@@ -8,18 +8,22 @@ import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.persistence.dao.PaymentCardRepository;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
 import org.sharyan.project.cardwebapp.persistence.entity.PaymentCard;
+import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,6 +73,16 @@ public class AddNewPaymentCardTests {
         String cardName = "newCard";
         String cardExpiry = "2019-02";
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        User loggedInUser = User.builder().username(auth.getName())
+                .password((String)auth.getCredentials())
+                .id(12L)
+                .roles(Collections.singletonList("ROLE_USER"))
+                .build();
+
+        when(userRepository.findByUsername(auth.getName())).thenReturn(loggedInUser);
+
         mockMvc.perform(post("/card/add")
                     .param("cardNumber", cardNumber)
                     .param("cardName", cardName)
@@ -78,6 +92,5 @@ public class AddNewPaymentCardTests {
                 .andExpect(view().name("redirect:/homepage?addCardSuccess"));
 
         verify(paymentCardRepository, times(1))
-                .save(eq(PaymentCard.builder().cardNumber(cardNumber).cardName(cardName).month(2).year(2019).build()));
     }
 }

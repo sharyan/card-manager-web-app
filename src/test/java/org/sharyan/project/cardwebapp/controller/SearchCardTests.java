@@ -7,6 +7,7 @@ import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.persistence.dao.PaymentCardRepository;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
 import org.sharyan.project.cardwebapp.persistence.entity.PaymentCard;
+import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -79,7 +81,10 @@ public class SearchCardTests {
     public void testSearchWithResults() throws Exception {
         String searchTerm = "00000000000000";
 
-        when(paymentCardRepository.findAllByCardNumberEquals(searchTerm))
+        when(userRepository.findByUsername(eq("username")))
+                .thenReturn(User.builder().username("username").id(1L).build());
+
+        when(paymentCardRepository.findAllByCardNumberLikeAndOwnerIdEquals(searchTerm, 1L))
                 .thenReturn(IntStream.of(3).mapToObj(i -> PaymentCard.builder()
                         .cardNumber(searchTerm)
                         .cardName(searchTerm + "-" + i)
