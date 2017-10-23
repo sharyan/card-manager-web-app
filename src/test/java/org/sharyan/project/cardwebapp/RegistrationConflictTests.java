@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.sharyan.project.cardwebapp.config.ApplicationConfig;
 import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.UserController;
+import org.sharyan.project.cardwebapp.persistence.dao.PaymentCardRepository;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
-import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,6 +36,9 @@ public class RegistrationConflictTests {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private PaymentCardRepository paymentCardRepository;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -51,7 +54,7 @@ public class RegistrationConflictTests {
                 .thenReturn(User.builder()
                         .username(username)
                         .password(password)
-                        .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
+                        .roles(Collections.singletonList("ROLE_USER"))
                         .build());
 
         String redirectedUrl = mockMvc.perform(post("/user/register")

@@ -26,8 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import java.security.SecureRandom;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -52,11 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     .loginPage("/login")
                     .successForwardUrl("/")
+                    .failureForwardUrl("/login?error")
+                    .failureUrl("/login?error")
                     .usernameParameter("username")
                     .passwordParameter("password")
 //                    .successHandler(authenticationSuccessHandler)
 //                    .failureHandler(authenticationFailureHandler)
-                    .failureUrl("/login?error")
                     .permitAll()
             .and()
                 .sessionManagement()
@@ -100,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(securityProperties.getPassword().getStrength(), new SecureRandom());
+        return new BCryptPasswordEncoder(securityProperties.getPassword().getStrength());
     }
 
     @Bean

@@ -28,8 +28,8 @@ public class RegistrationLoginFlowTest {
         UserDto newUser = UserDto.builder().username("john").password("mypassword").build();
         ResponseEntity<String> registrationResult = restTemplate.postForEntity("/register", newUser, String.class);
 
-        assertThat(registrationResult)
-                .hasFieldOrPropertyWithValue("getStatusCode", HttpStatus.FOUND);
+        assertThat(registrationResult.getStatusCode())
+                .isEqualByComparingTo(HttpStatus.FOUND);
 
     }
 }

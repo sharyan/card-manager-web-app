@@ -1,7 +1,6 @@
 package org.sharyan.project.cardwebapp.security;
 
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
-import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.sharyan.project.cardwebapp.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +45,8 @@ public class PersistentUserDetailsService implements UserDetailsService {
                 true, true, true, true, getAuthorities(user.getRoles()));
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
-        return roles.stream().map(Role::getName).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    private Collection<? extends GrantedAuthority> getAuthorities(final Collection<String> roles) {
+        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }
 

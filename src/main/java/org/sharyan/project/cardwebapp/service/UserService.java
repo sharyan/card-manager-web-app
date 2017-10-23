@@ -3,7 +3,6 @@ package org.sharyan.project.cardwebapp.service;
 import org.sharyan.project.cardwebapp.dto.UserDto;
 import org.sharyan.project.cardwebapp.error.UserAlreadyExistsException;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
-import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +27,7 @@ public class UserService {
         return userRepository.save(User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build());
     }
 }

@@ -5,8 +5,8 @@ import org.junit.runner.RunWith;
 import org.sharyan.project.cardwebapp.config.ApplicationConfig;
 import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.UserController;
+import org.sharyan.project.cardwebapp.persistence.dao.PaymentCardRepository;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
-import org.sharyan.project.cardwebapp.persistence.entity.Role;
 import org.sharyan.project.cardwebapp.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -41,6 +41,9 @@ public class UserControllerTests {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private PaymentCardRepository paymentCardRepository;
+
     @Autowired
     private WebApplicationContext applicationContext;
 
@@ -67,7 +70,7 @@ public class UserControllerTests {
         when(userRepository.findByUsername(eq("normalUser"))).thenReturn(User.builder()
                 .username("normalUser")
                 .password(passwordEncoder.encode("pwdmypass"))
-                .roles(Collections.singletonList(Role.builder().name("ROLE_USER").build()))
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
         mockMvc.perform(loginRequest)

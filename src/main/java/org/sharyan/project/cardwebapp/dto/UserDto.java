@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @Builder
@@ -16,15 +13,12 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class UserDto {
 
-    @NotNull
-    @NotEmpty
-    @NotBlank
-    @Size(min=3, max=30)
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min=3, max=30, message = "Username has to be between 3 and 30 characters")
+    @Pattern(regexp = "[0-9A-Za-z]{3,30}", message = "Username must be made up of valid alphanumeric characters")
     private String username;
 
-    @NotNull
-    @NotEmpty
-    @NotBlank
-    @Size(min=6, max=30)
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min=7, message = "Password must be greater than 6 characters")
     private String password;
 }

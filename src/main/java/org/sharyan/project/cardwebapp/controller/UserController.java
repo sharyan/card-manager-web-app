@@ -32,7 +32,11 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/register")
-    public String doRegistration(@ModelAttribute @Valid UserDto user, BindingResult result) {
+    public String doRegistration(@ModelAttribute(value = "user") @Valid UserDto user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "register";
+        }
+
         userService.registerNewUser(user);
         return "homepage";
     }
