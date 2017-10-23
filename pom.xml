@@ -26,6 +26,9 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<java.source.version>${java.version}</java.source.version>
 		<java.target.version>${java.version}</java.target.version>
+
+		<tomcat.port>9221</tomcat.port>
+        <postgres.port>5444</postgres.port>
 	</properties>
 
 	<dependencies>
@@ -97,6 +100,79 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.21.0</version>
+				<configuration>
+					<images>
+						<image>
+							<alias>service</alias>
+							<name>openjdk</name>
+
+							<build>
+								<from>java:8</from>
+								<assembly>
+									<descriptor>docker-assembly.xml</descriptor>
+								</assembly>
+								<cmd>
+									<shell>java -jar -Dpostgres.port=${postgres.port} /maven/card-web-app-${project.version}.jar</shell>
+								</cmd>
+							</build>
+
+							<run>
+								<ports>
+									<port>${tomcat.port}:8080</port>
+								</ports>
+								<wait>
+									<http>
+										<url>http://localhost:${tomcat.port}/access</url>
+									</http>
+									<time>10000</time>
+								</wait>
+								<links>
+									<link>database:db</link>
+								</links>
+							</run>
+						</image>
+						<image>
+							<alias>database</alias>
+							<name>postgres:9</name>
+							<run>
+                                <ports>
+                                    <port>${postgres.port}:5432</port>
+                                </ports>
+								<wait>
+									<log>Database system is ready to accept connections</log>
+									<time>20000</time>
+								</wait>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<!-- Connect start/stop to pre- and
+                     post-integration-test phase, respectively if you want to start
+                     your docker containers during integration tests -->
+				<executions>
+					<execution>
+						<id>start</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<!-- "build" should be used to create the images with the
+                                 artifact -->
+							<goal>build</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -138,5 +214,4 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
 </project>
