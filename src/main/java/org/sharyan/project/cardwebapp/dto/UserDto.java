@@ -15,7 +15,7 @@ public class UserDto {
 
     @NotBlank(message = "Username cannot be blank")
     @Size(min=3, max=30, message = "Username has to be between 3 and 30 characters")
-    @Pattern(regexp = "[0-9A-Za-z]{3,30}", message = "Username must be made up of valid alphanumeric characters")
+    @Pattern(regexp = "[0-9A-Za-z_]{3,30}", message = "Username must be made up of valid alphanumeric characters")
     private String username;
 
     @NotBlank(message = "Password cannot be blank")

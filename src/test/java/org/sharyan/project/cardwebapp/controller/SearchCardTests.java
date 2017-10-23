@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -81,8 +83,10 @@ public class SearchCardTests {
     public void testSearchWithResults() throws Exception {
         String searchTerm = "00000000000000";
 
-        when(userRepository.findByUsername(eq("username")))
-                .thenReturn(User.builder().username("username").id(1L).build());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        when(userRepository.findByUsername(eq(auth.getName())))
+                .thenReturn(User.builder().username(auth.getName()).id(1L).build());
 
         when(paymentCardRepository.findAllByCardNumberLikeAndOwnerIdEquals(searchTerm, 1L))
                 .thenReturn(IntStream.of(3).mapToObj(i -> PaymentCard.builder()

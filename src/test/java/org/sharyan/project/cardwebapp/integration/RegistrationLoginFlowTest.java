@@ -26,10 +26,10 @@ public class RegistrationLoginFlowTest {
         assertThat(registrationPageContent).contains("Registration");
 
         UserDto newUser = UserDto.builder().username("john").password("mypassword").build();
-        ResponseEntity<String> registrationResult = restTemplate.postForEntity("/register", newUser, String.class);
+        ResponseEntity<String> registrationResult = restTemplate.postForEntity("/user/register", newUser, String.class);
 
         assertThat(registrationResult.getStatusCode())
-                .isEqualByComparingTo(HttpStatus.FOUND);
+                .isEqualByComparingTo(HttpStatus.OK);
 
     }
 }

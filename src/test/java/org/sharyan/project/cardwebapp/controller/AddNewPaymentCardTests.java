@@ -92,5 +92,6 @@ public class AddNewPaymentCardTests {
                 .andExpect(view().name("redirect:/homepage?addCardSuccess"));
 
         verify(paymentCardRepository, times(1))
+                .save(eq(PaymentCard.builder().cardNumber(cardNumber).cardName(cardName).month(2).year(2019).owner(loggedInUser).build()));
     }
 }
