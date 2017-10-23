@@ -7,6 +7,7 @@ import org.sharyan.project.cardwebapp.config.SecurityConfig;
 import org.sharyan.project.cardwebapp.controller.PaymentCardController;
 import org.sharyan.project.cardwebapp.persistence.dao.PaymentCardRepository;
 import org.sharyan.project.cardwebapp.persistence.dao.UserRepository;
+import org.sharyan.project.cardwebapp.persistence.entity.PaymentCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,7 +16,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,6 +70,26 @@ public class SearchCardTests {
     public void testSearchWhenLoggedIn() throws Exception {
         mockMvc.perform(post("/card/find")
                 .param("searchTerm", "SEARCHVALUE")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("searchResults"));
+    }
+
+    @Test
+    @WithMockUser
+    public void testSearchWithResults() throws Exception {
+        String searchTerm = "00000000000000";
+
+        when(paymentCardRepository.findAllByCardNumberEquals(searchTerm))
+                .thenReturn(IntStream.of(3).mapToObj(i -> PaymentCard.builder()
+                        .cardNumber(searchTerm)
+                        .cardName(searchTerm + "-" + i)
+                        .month(i)
+                        .year(2020 + i)
+                        .build()).collect(Collectors.toList()));
+
+        mockMvc.perform(post("/card/find")
+                .param("searchTerm", searchTerm)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("searchResults"));
