@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @Controller
 public class PaymentCardController {
@@ -37,9 +37,9 @@ public class PaymentCardController {
     }
 
     @PostMapping("/card/find")
-    public String searchCards(@RequestParam String searchTerm, Errors errors, Model model) {
+    public String searchCards(@RequestParam String searchTerm, Model model) {
         if (!Patterns.VALID_SEARCH_CARD_PATTERN.matcher(searchTerm).matches()) {
-            errors.rejectValue("searchTerm", "errors.fields.searchTerm");
+            model.addAttribute("cards", Collections.emptyList());
             return "searchResults";
         } else {
             model.addAttribute("cards", paymentCardService.searchForPaymentCards(searchTerm));

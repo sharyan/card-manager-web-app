@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -49,5 +50,23 @@ public class SearchCardTests {
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("cardSearch"));
+    }
+
+    @Test
+    public void testSearchWhenNotLoggedIn() throws Exception {
+        mockMvc.perform(post("/card/find")
+                .param("searchTerm", "SEARCHVALUE"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(result -> assertThat(result.getResponse().getRedirectedUrl()).contains("login"));
+    }
+
+    @Test
+    @WithMockUser
+    public void testSearchWhenLoggedIn() throws Exception {
+        mockMvc.perform(post("/card/find")
+                .param("searchTerm", "SEARCHVALUE")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("searchResults"));
     }
 }
