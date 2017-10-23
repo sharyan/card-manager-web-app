@@ -6,32 +6,30 @@
 </head>
 <body>
 <h1 th:text="#{title.newCard}"></h1>
-<form action="#" th:action="@{/card/add}" method="post">
-    <!--<ul>-->
-    <!--<li th:each="err : ${#fields.errors('cardNumber')}" th:text="${err}" />-->
-    <!--<li th:each="err : ${#fields.errors('cardName')}" th:text="${err}" />-->
-    <!--<li th:each="err : ${#fields.errors('cardExpiryMonth')}" th:text="${err}" />-->
-    <!--<li th:each="err : ${#fields.errors('cardExpiryYear')}" th:text="${err}" />-->
-    <!--</ul>-->
-    <table border="0">
-        <tr>
-            <td><label th:text="#{fields.card_number}" /></td>
-            <td><input type="text" id="cardNumber" name="cardNumber" autofocus="autofocus" /></td>
-        </tr>
-        <tr>
-            <td><label th:text="#{fields.card_name}" /></td>
-            <td><input type="text" id="cardName" name="cardName" /></td>
-        </tr>
-        <tr>
-            <td><label th:text="#{fields.card_expiry}" /></td>
-            <td><input type="month" id="cardExpiryMonth" name="cardExpiryMonth" /></td>
-            <td><input type="number" min="1960" max="2030" id="cardExpiryYear" name="cardExpiryYear" /></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Submit" /></td>
-            <td><input type="reset"></td>
-        </tr>
-    </table>
+<form action="#" th:action="@{/card/add}" method="post" th:object="${paymentCard}">
+    <ul class="alert alert-danger" th:if="${#fields.hasErrors()}">
+        <li th:each="err : ${#fields.allErrors()}" class="label label-danger" th:text="${err}"></li>
+    </ul>
+
+    <fieldset>
+        <legend>Add a new payment card</legend>
+        <div>
+            <label th:text="#{fields.cardNumber}" />
+            <input type="text" id="cardNumber" name="cardNumber" autofocus="autofocus" />
+        </div>
+        <div>
+            <label th:text="#{fields.cardName}" />
+            <input type="text" id="cardName" name="cardName" />
+        </div>
+        <div>
+            <label th:text="#{fields.cardExpiry}" />
+            <input type="month" id="cardExpiry" name="cardExpiry" />
+        </div>
+        <div>
+            <input type="submit" value="Submit" />
+            <input type="reset">
+        </div>
+    </fieldset>
 </form>
 </body>
 </html>

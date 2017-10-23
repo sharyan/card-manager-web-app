@@ -21,14 +21,15 @@ public class PaymentCardService {
         PaymentCard existingPaymentCard = paymentCardRepository.findByCardNumber(paymentCardDto.getCardNumber());
 
         if (existingPaymentCard != null) {
+            // delete card, and update with new details
             paymentCardRepository.deleteById(existingPaymentCard.getId());
         }
 
         paymentCardRepository.save(PaymentCard.builder()
                 .cardNumber(paymentCardDto.getCardNumber())
                 .cardName(paymentCardDto.getCardName())
-                .month(paymentCardDto.getExpiryMonth().getValue())
-                .year(paymentCardDto.getExpiryYear().getValue())
+                .month(paymentCardDto.getCardExpiry().getMonth().getValue())
+                .year(paymentCardDto.getCardExpiry().getYear().getValue())
                 .build());
     }
 

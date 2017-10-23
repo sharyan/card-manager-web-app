@@ -6,7 +6,10 @@ import org.sharyan.project.cardwebapp.validation.Patterns;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,12 +21,22 @@ public class PaymentCardController {
     @Autowired
     private PaymentCardService paymentCardService;
 
-    @PostMapping("/card/add")
-    public String addNewPaymentCard(@Valid PaymentCardDto newCard) {
-        return "homepage?addCardSuccess";
+    @GetMapping(path = "/card/new")
+    public String getAddNewPaymentCardPage(Model model) {
+        model.addAttribute("paymentCard", new PaymentCardDto());
+        return "addCard";
     }
 
-    @PostMapping("/card/search")
+    @PostMapping("/card/add")
+    public String addNewPaymentCard(@ModelAttribute("paymentCard") @Valid PaymentCardDto paymentCard, BindingResult result) {
+        if (result.hasErrors()) {
+            return "addCard";
+        }
+        paymentCardService.addOrUpdatePaymentCard(paymentCard);
+        return "redirect:/homepage?addCardSuccess";
+    }
+
+    @PostMapping("/card/find")
     public String searchCards(@RequestParam String searchTerm, Errors errors, Model model) {
         if (!Patterns.VALID_SEARCH_CARD_PATTERN.matcher(searchTerm).matches()) {
             errors.rejectValue("searchTerm", "errors.fields.searchTerm");

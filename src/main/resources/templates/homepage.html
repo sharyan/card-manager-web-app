@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1 th:text="#{title.homepage}"></h1>
+
+<p th:if="${param.addCardSuccess}" th:text="#{message.card.addSuccess}"></p>
+
 <a th:href="@{/card/new}">Add a new card</a>
 <a th:href="@{/card/search}">Search cards</a>
 </body>
