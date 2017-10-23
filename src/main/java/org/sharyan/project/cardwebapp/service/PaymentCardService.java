@@ -32,7 +32,6 @@ public class PaymentCardService {
                 .build());
     }
 
-
     @Secured(value = {"ROLE_USER", "ROLE_ADMIN"})
     public List<PaymentCard> searchForPaymentCards(String cardNumber) {
         return paymentCardRepository.findAllByCardNumberEquals(cardNumber);

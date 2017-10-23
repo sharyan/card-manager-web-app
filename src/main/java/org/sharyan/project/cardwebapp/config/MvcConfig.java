@@ -1,7 +1,6 @@
 package org.sharyan.project.cardwebapp.config;
 
 
-import org.sharyan.project.cardwebapp.validation.UserValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -30,10 +29,5 @@ public class MvcConfig implements WebMvcConfigurer {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
         return messageSource;
-    }
-
-    @Bean
-    public UserValidator userValidator() {
-        return new UserValidator();
     }
 }

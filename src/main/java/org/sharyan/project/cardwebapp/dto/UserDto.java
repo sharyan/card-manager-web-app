@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,11 +17,14 @@ import javax.validation.constraints.Size;
 public class UserDto {
 
     @NotNull
-    @NotNull
+    @NotEmpty
+    @NotBlank
     @Size(min=3, max=30)
     private String username;
 
     @NotNull
+    @NotEmpty
+    @NotBlank
     @Size(min=6, max=30)
     private String password;
 }
